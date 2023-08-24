@@ -5,7 +5,7 @@ The Capacitor Screen Recorder plugin is a powerful tool for mobile app developer
 ## Install
 
 ```bash
-npm install capacitor-screen-recorder
+npm install @srikant-kumar/capacitor-screen-recorder
 npx cap sync
 ```
 
@@ -13,25 +13,130 @@ npx cap sync
 
 <docgen-index>
 
-* [`echo(...)`](#echo)
+* [`start(...)`](#start)
+* [`stop(...)`](#stop)
+* [`recorder_status(...)`](#recorder_status)
+* [`addListener('onRecordingStarted', ...)`](#addlisteneronrecordingstarted)
+* [`addListener('onRecordingComplete', ...)`](#addlisteneronrecordingcomplete)
+* [`addListener('onRecordingError', ...)`](#addlisteneronrecordingerror)
+* [Interfaces](#interfaces)
+* [Type Aliases](#type-aliases)
 
 </docgen-index>
 
 <docgen-api>
 <!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
 
-### echo(...)
+### start(...)
 
 ```typescript
-echo(options: { value: string; }) => Promise<{ value: string; }>
+start(options: any) => Promise<any>
 ```
 
-| Param         | Type                            |
-| ------------- | ------------------------------- |
-| **`options`** | <code>{ value: string; }</code> |
+| Param         | Type             |
+| ------------- | ---------------- |
+| **`options`** | <code>any</code> |
 
-**Returns:** <code>Promise&lt;{ value: string; }&gt;</code>
+**Returns:** <code>Promise&lt;any&gt;</code>
 
 --------------------
+
+
+### stop(...)
+
+```typescript
+stop(options: any) => Promise<any>
+```
+
+| Param         | Type             |
+| ------------- | ---------------- |
+| **`options`** | <code>any</code> |
+
+**Returns:** <code>Promise&lt;any&gt;</code>
+
+--------------------
+
+
+### recorder_status(...)
+
+```typescript
+recorder_status(options: any) => Promise<any>
+```
+
+| Param         | Type             |
+| ------------- | ---------------- |
+| **`options`** | <code>any</code> |
+
+**Returns:** <code>Promise&lt;any&gt;</code>
+
+--------------------
+
+
+### addListener('onRecordingStarted', ...)
+
+```typescript
+addListener(eventName: 'onRecordingStarted', listenerFunc: (data: any) => Record<string, unknown>) => Promise<PluginListenerHandle> & PluginListenerHandle
+```
+
+| Param              | Type                                                                               |
+| ------------------ | ---------------------------------------------------------------------------------- |
+| **`eventName`**    | <code>'onRecordingStarted'</code>                                                  |
+| **`listenerFunc`** | <code>(data: any) =&gt; <a href="#record">Record</a>&lt;string, unknown&gt;</code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+--------------------
+
+
+### addListener('onRecordingComplete', ...)
+
+```typescript
+addListener(eventName: 'onRecordingComplete', listenerFunc: (data: any) => Record<string, unknown>) => Promise<PluginListenerHandle> & PluginListenerHandle
+```
+
+| Param              | Type                                                                               |
+| ------------------ | ---------------------------------------------------------------------------------- |
+| **`eventName`**    | <code>'onRecordingComplete'</code>                                                 |
+| **`listenerFunc`** | <code>(data: any) =&gt; <a href="#record">Record</a>&lt;string, unknown&gt;</code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+--------------------
+
+
+### addListener('onRecordingError', ...)
+
+```typescript
+addListener(eventName: 'onRecordingError', listenerFunc: (data: any) => Record<string, unknown>) => Promise<PluginListenerHandle> & PluginListenerHandle
+```
+
+| Param              | Type                                                                               |
+| ------------------ | ---------------------------------------------------------------------------------- |
+| **`eventName`**    | <code>'onRecordingError'</code>                                                    |
+| **`listenerFunc`** | <code>(data: any) =&gt; <a href="#record">Record</a>&lt;string, unknown&gt;</code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+--------------------
+
+
+### Interfaces
+
+
+#### PluginListenerHandle
+
+| Prop         | Type                                      |
+| ------------ | ----------------------------------------- |
+| **`remove`** | <code>() =&gt; Promise&lt;void&gt;</code> |
+
+
+### Type Aliases
+
+
+#### Record
+
+Construct a type with a set of properties K of type T
+
+<code>{ [P in K]: T; }</code>
 
 </docgen-api>

@@ -10,4 +10,19 @@ export class ScreenRecorderWeb
     console.log('ECHO', options);
     return options;
   }
+
+  async start(options: any): Promise<any> {
+    console.log('startFunctionCalled', options);
+    throw new Error("Method not implemented.");
+  }
+
+  async stop(options: any): Promise<any> {
+    console.log('stopFunctionCalled', options);
+    throw new Error("Method not implemented.");
+  }
+
+  async recorder_status(options: any): Promise<any> {
+    console.log('recorderStatusFunctionCalled', options);
+    throw new Error("Method not implemented.");
+  }
 }

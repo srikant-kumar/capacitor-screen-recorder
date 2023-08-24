@@ -7,12 +7,26 @@ import Capacitor
  */
 @objc(ScreenRecorderPlugin)
 public class ScreenRecorderPlugin: CAPPlugin {
-    private let implementation = ScreenRecorder()
-
-    @objc func echo(_ call: CAPPluginCall) {
+    
+    @objc func start(_ call: CAPPluginCall) {
         let value = call.getString("value") ?? ""
         call.resolve([
-            "value": implementation.echo(value)
+            "status":false,
+            "message": "This method is not implemented for iOS"
+        ])
+    }
+
+    @objc func stop(_ call: CAPPluginCall) {]
+        call.resolve([
+            "status":false,
+            "message": "This method is not implemented for iOS"
+        ])
+    }
+
+    @objc func recorder_status(_ call: CAPPluginCall) {
+        call.resolve([
+            "status":false,
+            "message": "This method is not implemented for iOS"
         ])
     }
 }
