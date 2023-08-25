@@ -1,6 +1,6 @@
 {
   "name": "@srikant-kumar/capacitor-screen-recorder",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "The Capacitor Screen Recorder plugin is a powerful tool for mobile app developers looking to enhance their applications with screen recording functionality. Seamlessly integrated with the Capacitor framework, this plugin allows users to effortlessly capture, save, and share video recordings of their app interactions. With customizable settings for video quality and recording controls, developers can provide users with a versatile and user-friendly recording experience. Whether for tutorial creation, bug reporting, or user engagement, the Capacitor Screen Recorder plugin offers a straightforward solution to incorporate screen recording capabilities into Capacitor-powered apps, enhancing their overall utility and user experience",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",

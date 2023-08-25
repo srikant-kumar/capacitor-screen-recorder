@@ -1,6 +1,7 @@
 package com.srikantkumar.capacitor.screen.recorder;
 
 import com.getcapacitor.JSObject;
+import com.getcapacitor.PermissionState;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
@@ -37,6 +38,8 @@ import androidx.activity.result.ActivityResult;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.getcapacitor.annotation.Permission;
+import com.getcapacitor.annotation.PermissionCallback;
 import com.hbisoft.hbrecorder.HBRecorder;
 import com.hbisoft.hbrecorder.HBRecorderListener;
 import com.hbisoft.hbrecorder.HBRecorderCodecInfo;
@@ -46,7 +49,29 @@ import static com.hbisoft.hbrecorder.Constants.MAX_FILE_SIZE_REACHED_ERROR;
 import static com.hbisoft.hbrecorder.Constants.SETTINGS_ERROR;
 
 
-@CapacitorPlugin(name = "ScreenRecorder")
+@CapacitorPlugin(
+        name = "ScreenRecorder",
+        permissions = {
+                @Permission(
+                        alias = "notification",
+                        strings = {Manifest.permission.POST_NOTIFICATIONS}
+                ),
+                @Permission(
+                        alias = "audio",
+                        strings = {Manifest.permission.RECORD_AUDIO}
+                ), @Permission(
+                alias = "foreground",
+                strings = {Manifest.permission.FOREGROUND_SERVICE}
+        ),
+                @Permission(
+                        alias = "storage",
+                        strings = {
+                                Manifest.permission.READ_EXTERNAL_STORAGE,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        }
+                )
+        }
+)
 public class ScreenRecorderPlugin extends Plugin implements HBRecorderListener {
 
     //Permissions
@@ -108,35 +133,82 @@ public class ScreenRecorderPlugin extends Plugin implements HBRecorderListener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             //first check if permissions was granted
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS, PERMISSION_REQ_POST_NOTIFICATIONS) && checkSelfPermission(Manifest.permission.RECORD_AUDIO, PERMISSION_REQ_ID_RECORD_AUDIO)) {
-                    hasPermissions = true;
-                }
+                checkAndGetNotificationPermission(call);
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                if (checkSelfPermission(Manifest.permission.RECORD_AUDIO, PERMISSION_REQ_ID_RECORD_AUDIO)) {
-                    hasPermissions = true;
-                }
+                checkAndGetAudioPermission(call);
             } else {
-                if (checkSelfPermission(Manifest.permission.RECORD_AUDIO, PERMISSION_REQ_ID_RECORD_AUDIO) && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, PERMISSION_REQ_ID_WRITE_EXTERNAL_STORAGE)) {
-                    hasPermissions = true;
-                }
-            }
-
-            if (hasPermissions) {
-                //check if recording is in progress
-                //and stop it if it is
-                if (hbRecorder.isBusyRecording()) {
-                    hbRecorder.stopScreenRecording();
-                } else {
-                    startRecordingScreen(call);
-
-                    JSObject result = new JSObject();
-                    result.put("status", true);
-                    result.put("message", "Record Start Called. Use onRecordingStarted Listener to Get Data");
-                    call.resolve(result);
-                }
+                checkAndGetStoragePermission(call);
             }
         } else {
             showLongToast("This library requires API 21>");
+        }
+    }
+
+    private void checkAndGetNotificationPermission(PluginCall call) {
+        if (getPermissionState("notification") != PermissionState.GRANTED) {
+            requestPermissionForAlias("notification", call, "notificationCallBack");
+        } else {
+            checkAndGetAudioPermission(call);
+        }
+    }
+
+    @PermissionCallback
+    private void notificationCallBack(PluginCall call) {
+        if (getPermissionState("notification") == PermissionState.GRANTED) {
+            checkAndGetAudioPermission(call);
+        } else {
+            Log.e("Permission", "Notification Not Granted");
+            call.reject("Permission Notification is required");
+        }
+    }
+
+    private void checkAndGetStoragePermission(PluginCall call) {
+        if (getPermissionState("storage") != PermissionState.GRANTED) {
+            requestPermissionForAlias("storage", call, "storageCallBack");
+        } else {
+            checkAndGetAudioPermission(call);
+        }
+    }
+
+    @PermissionCallback
+    private void storageCallBack(PluginCall call) {
+        if (getPermissionState("storage") == PermissionState.GRANTED) {
+            checkAndGetAudioPermission(call);
+        } else {
+            Log.e("Permission", "Storage Not Granted");
+            call.reject("Permission Storage is required");
+        }
+    }
+
+    private void checkAndGetAudioPermission(PluginCall call) {
+        if (getPermissionState("audio") != PermissionState.GRANTED) {
+            requestPermissionForAlias("audio", call, "audioCallBack");
+        } else {
+            callRecordingAndGenerateResponse(call);
+        }
+    }
+
+    @PermissionCallback
+    private void audioCallBack(PluginCall call) {
+        if (getPermissionState("audio") == PermissionState.GRANTED) {
+            callRecordingAndGenerateResponse(call);
+        } else {
+            Log.e("Permission", "Audio Not Granted");
+            call.reject("Permission Audio is required");
+        }
+    }
+
+
+    private void callRecordingAndGenerateResponse(PluginCall call) {
+        if (hbRecorder.isBusyRecording()) {
+            hbRecorder.stopScreenRecording();
+        } else {
+            startRecordingScreen(call);
+
+            JSObject result = new JSObject();
+            result.put("status", true);
+            result.put("message", "Record Start Called. Use onRecordingStarted Listener to Get Data");
+            call.resolve(result);
         }
     }
 
@@ -208,11 +280,11 @@ public class ScreenRecorderPlugin extends Plugin implements HBRecorderListener {
         JSObject result = new JSObject();
         String msg;
         if (errorCode == SETTINGS_ERROR) {
-            msg="Setting Not Supported";
+            msg = "Setting Not Supported";
         } else if (errorCode == MAX_FILE_SIZE_REACHED_ERROR) {
-            msg="Max File Size Reached";
+            msg = "Max File Size Reached";
         } else {
-            msg="Unknown Error";
+            msg = "Unknown Error";
             Log.e("HBRecorderOnError", errorMessage);
         }
 

@@ -100,7 +100,6 @@ window.customElements.define(
       self.shadowRoot
         .querySelector('#take-photo2')
         .addEventListener('click', async function (e) {
-          alert('stop');
           try {
             const stop = ScreenRecorder.stop();
             console.log(stop);
