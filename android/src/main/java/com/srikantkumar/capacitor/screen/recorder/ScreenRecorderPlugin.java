@@ -308,10 +308,9 @@ public class ScreenRecorderPlugin extends Plugin implements HBRecorderListener {
 
     //Get/Set the selected settings
     private void quickSettings() {
-        hbRecorder.setAudioBitrate(128000);
-        hbRecorder.setAudioSamplingRate(44100);
         hbRecorder.recordHDVideo(true);
         hbRecorder.isAudioEnabled(false);
+        hbRecorder.setVideoEncoder("H264");
     }
 
     //Create Folder
@@ -418,11 +417,11 @@ public class ScreenRecorderPlugin extends Plugin implements HBRecorderListener {
 
     private void startRecordingScreen(PluginCall call) {
         Log.d("Start", "startRecordingScreen");
+        hbRecorder.enableCustomSettings();
         quickSettings();
         MediaProjectionManager mediaProjectionManager = (MediaProjectionManager) getContext().getSystemService(Context.MEDIA_PROJECTION_SERVICE);
         Intent permissionIntent = mediaProjectionManager != null ? mediaProjectionManager.createScreenCaptureIntent() : null;
-        //startActivityForResult(call, permissionIntent, SCREEN_RECORD_REQUEST_CODE);
-
+        
         //Deprecated Function Open Activity With Result
         //startActivityForResult(call,permissionIntent,SCREEN_RECORD_REQUEST_CODE);
 
